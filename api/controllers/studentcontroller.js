@@ -13,26 +13,63 @@ exports.list_all_students = function(req,res){
 //Controller for creating a Students Detail
 exports.create_a_student  = function(req,res){
     data  = req.body
+    console.log(data)
     var new_student = new Student(data);
-    if(Student.find({"rol_number":data["rol_numer"]})){
-        res.json({"status":0,"message":"Roll Number Already Exist"});
-    }
-    console.log(req.body)
-    new_student.save(function(err,student){
-        if (err){
-            
-            if(data["age"] == ""){
-                res.json({"status":0,"message":"Age is Mandatory"});
-                
-            }
-            else{
-                res.json({"status":0,"message":err})
-            }
+    Student.find({"rol_number":Number(data["rol_number"])},function(err,docs){
+
+        if(docs.length){
+            res.send({"status":0,"message":"Roll Number Already Exist"});
         }
         else{
-        res.json({"status":2,"message":"Sucessfully Created"})}
+            new_student.save(function(err,student){
+                if (err){
+                    
+                    if(data["age"] == ""){
+                        res.json({"status":0,"message":"Age is Mandatory"});
+                        
+                    }
+                    else{
+                        res.json({"status":0,"message":err})
+                    }
+                }
+                else{
+                res.json({"status":2,"message":"Sucessfully Created"})}
+            })
+        }
     })
+       
+    
+    
+
+    
+
 }
+
+// exports.create_a_student  = function(req,res){
+//     data  = req.body
+//     console.log(data)
+//     var new_student = new Student(data);
+//     if(Student.find({"rol_number":Number(data["rol_number"])})){
+//         res.send({"status":0,"message":"Roll Number Already Exist"});
+//     }
+    
+//         new_student.save(function(err,student){
+//             if (err){
+                
+//                 if(data["age"] == ""){
+//                     res.json({"status":0,"message":"Age is Mandatory"});
+                    
+//                 }
+//                 else{
+//                     res.json({"status":0,"message":err})
+//                 }
+//             }
+//             else{
+//             res.json({"status":2,"message":"Sucessfully Created"})}
+//         })
+    
+
+// }
 
 //Controller for a student details
 exports.student_detail = function(req,res){
@@ -45,12 +82,19 @@ exports.student_detail = function(req,res){
 
 //Contoller for updating the Student
 exports.update_a_student = function(req,res){
-    Student.findOneAndUpdate({_id:req.params.Id}, req.body , {new:true}, function(err,student){
-        if (err)
-            res.send({"status":0,"message":err});
-        res.json({"status":2,"message":"Successfully Updated"});
-    })
-}
+        Student.findOneAndUpdate({_id:req.params.Id}, req.body , {new:true}, function(err,student){
+            if (err)
+                res.send({"status":0,"message":err});
+            res.json({"status":2,"message":"Successfully Updated"});
+        })
+    }
+// exports.update_a_student = function(req,res){
+//     Student.findOneAndUpdate({_id:req.params.Id}, req.body , {new:true}, function(err,student){
+//         if (err)
+//             res.send({"status":0,"message":err});
+//         res.json({"status":2,"message":"Successfully Updated"});
+//     })
+// }
 
 //Contoller for deleting the students record
 
