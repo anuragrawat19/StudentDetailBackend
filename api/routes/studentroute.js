@@ -1,7 +1,9 @@
+const cors = require('cors');
 module.exports = function(app){
     var studentlist = require('../controllers/studentcontroller');
 
 //  Created the students CRUD Routes here
+app.use(cors())
 
 app.route('/students')
     .get(studentlist.list_all_students)

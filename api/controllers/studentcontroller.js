@@ -12,20 +12,25 @@ exports.list_all_students = function(req,res){
 
 //Controller for creating a Students Detail
 exports.create_a_student  = function(req,res){
-    var new_student = new Student(req.body);
+    data  = req.body
+    var new_student = new Student(data);
+    if(Student.find({"rol_number":data["rol_numer"]})){
+        res.json({"status":0,"message":"Roll Number Already Exist"});
+    }
+    console.log(req.body)
     new_student.save(function(err,student){
         if (err){
-            data  = req.body
-            if("age" in data){
-                res.send(err);
+            
+            if(data["age"] == ""){
+                res.json({"status":0,"message":"Age is Mandatory"});
                 
             }
             else{
-                res.send({"status":0,"message":"Age is Mandatory"})
+                res.json({"status":0,"message":err})
             }
         }
         else{
-        res.json(student)}
+        res.json({"status":2,"message":"Sucessfully Created"})}
     })
 }
 
@@ -42,8 +47,8 @@ exports.student_detail = function(req,res){
 exports.update_a_student = function(req,res){
     Student.findOneAndUpdate({_id:req.params.Id}, req.body , {new:true}, function(err,student){
         if (err)
-            res.send(error);
-        res.json(student);
+            res.send({"status":0,"message":err});
+        res.json({"status":2,"message":"Successfully Updated"});
     })
 }
 
